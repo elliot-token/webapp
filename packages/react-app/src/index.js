@@ -34,17 +34,15 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <React.StrictMode>
-    <DAppProvider config={config}>
-      <ApolloProvider client={client}>
-        <ThemeProvider theme={theme}>
-          <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-              <App />
-            </PersistGate>
-          </Provider>
-        </ThemeProvider>
-      </ApolloProvider>
-    </DAppProvider>
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={theme}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <App />
+          </PersistGate>
+        </Provider>
+      </ThemeProvider>
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
