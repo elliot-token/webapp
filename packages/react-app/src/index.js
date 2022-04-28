@@ -12,6 +12,9 @@ import "@fontsource/poppins/700.css";
 import App from "./App";
 import { ThemeProvider } from "@mui/material";
 import theme from "./core/theme";
+import { Provider } from "react-redux";
+import store, { persistor } from "./store";
+import { PersistGate } from "redux-persist/integration/react";
 
 // Change this to your own Infura project id: https://infura.io/register
 const INFURA_PROJECT_ID = "defba93b47f748f09fcead8282b9e58e";
@@ -34,7 +37,11 @@ ReactDOM.render(
     <DAppProvider config={config}>
       <ApolloProvider client={client}>
         <ThemeProvider theme={theme}>
-          <App />
+          <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <App />
+            </PersistGate>
+          </Provider>
         </ThemeProvider>
       </ApolloProvider>
     </DAppProvider>

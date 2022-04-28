@@ -1,20 +1,12 @@
 import { useQuery } from "@apollo/client";
 import { Contract } from "@ethersproject/contracts";
-import {
-  shortenAddress,
-  useCall,
-  useEthers,
-  useLookupAddress,
-} from "@usedapp/core";
-import { useEffect, useState } from "react";
-
-import { Body, Header } from "./components";
+import { useCall } from "@usedapp/core";
+import { useEffect } from "react";
 
 import { addresses, abis } from "@my-app/contracts";
-import GET_TRANSFERS from "./graphql/subgraph";
+import GET_TRANSFERS from "./services/graphql/subgraph";
 import {
   AppBar,
-  Button,
   Container,
   CssBaseline,
   Paper,
@@ -23,48 +15,9 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import theme from "./core/theme";
 import { Box } from "@mui/system";
 import styled from "@emotion/styled";
-
-function WalletButton() {
-  const [rendered, setRendered] = useState("");
-
-  const ens = useLookupAddress();
-  const { account, activateBrowserWallet, deactivate, error } = useEthers();
-
-  useEffect(() => {
-    if (ens) {
-      setRendered(ens);
-    } else if (account) {
-      setRendered(shortenAddress(account));
-    } else {
-      setRendered("");
-    }
-  }, [account, ens, setRendered]);
-
-  useEffect(() => {
-    if (error) {
-      console.error("Error while connecting wallet:", error.message);
-    }
-  }, [error]);
-
-  return (
-    <Button
-      variant="contained"
-      onClick={() => {
-        if (!account) {
-          activateBrowserWallet();
-        } else {
-          deactivate();
-        }
-      }}
-    >
-      {rendered === "" && "Connect Wallet"}
-      {rendered !== "" && rendered}
-    </Button>
-  );
-}
+import WalletButton from "./organisms/WalletButton";
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
@@ -91,7 +44,6 @@ function App() {
       console.log({ transfers: data.transfers });
     }
   }, [loading, subgraphQueryError, data]);
-  console.log(tokenBalance);
   const theme = useTheme();
   return (
     <ThemeProvider theme={theme}>
