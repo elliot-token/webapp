@@ -15,6 +15,13 @@
     ]
   },
   "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@fontsource/poppins": "^4.5.5",
+    "@mui/icons-material": "^5.6.2",
+    "@mui/material": "^5.6.2",
+    "@reduxjs/toolkit": "^1.8.1",
+    "@types/styled-components": "^5.1.25",
     "@my-app/contracts": "^1.0.0",
     "@apollo/client": "^3.5.10",
     "@ethersproject/contracts": "^5.6.0",

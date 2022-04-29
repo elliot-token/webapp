@@ -47,11 +47,12 @@ function App() {
 */
   const them = useTheme();
   useEffect(() => {
-    console.log(Highcharts);
+    /* eslint-disable-next-line no-undef */
     Highcharts.getJSON(
       "https://demo-live-data.highcharts.com/aapl-ohlc.json",
       function(data) {
         // create the chart
+        /* eslint-disable-next-line no-undef */
         Highcharts.stockChart("container", {
           title: {
             text: "ETH/USDT",
