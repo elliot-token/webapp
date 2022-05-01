@@ -17,7 +17,7 @@ import store, { persistor } from "./store";
 import { PersistGate } from "redux-persist/integration/react";
 
 // Change this to your own Infura project id: https://infura.io/register
-const INFURA_PROJECT_ID = "defba93b47f748f09fcead8282b9e58e";
+const INFURA_PROJECT_ID = "eb3884baa7834bf1a1ff5ff3dca9a729";
 const config = {
   readOnlyChainId: Mainnet.chainId,
   readOnlyUrls: {
@@ -34,15 +34,17 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
-      <ThemeProvider theme={theme}>
-        <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <App />
-          </PersistGate>
-        </Provider>
-      </ThemeProvider>
-    </ApolloProvider>
+    <DAppProvider config={config}>
+      <ApolloProvider client={client}>
+        <ThemeProvider theme={theme}>
+          <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <App />
+            </PersistGate>
+          </Provider>
+        </ThemeProvider>
+      </ApolloProvider>
+    </DAppProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
