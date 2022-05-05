@@ -1,9 +1,11 @@
 import { CaseReducer, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { APITypes } from "../../services/api";
 import { indexReducer } from "../_helpers";
 
 type AuthState = {
   connectedWallet?: string;
   authToken?: string;
+  user?: APITypes.User;
 };
 const initialState: AuthState = {};
 
@@ -13,9 +15,11 @@ const loginRequest = indexReducer;
 const loginSuccess: AuthCaseReducer<{
   walletAddress: string;
   authToken: string;
+  user: APITypes.User;
 }> = (state, action) => {
   state.connectedWallet = action.payload.walletAddress;
   state.authToken = action.payload.authToken;
+  state.user = action.payload.user;
 };
 
 const logoutRequest: AuthCaseReducer = (state) => {
