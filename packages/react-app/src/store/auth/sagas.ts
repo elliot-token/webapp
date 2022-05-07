@@ -1,10 +1,10 @@
-import API from "../../services/api";
+import API from "services/api";
 import { AuthActions } from "./slice";
 import { call, takeLeading, put } from "../typed-saga";
+import history from "core/history";
 
 function* login() {
   const { address, token } = yield* call(API.generateToken);
-  console.log(address);
   const userExists = yield* call(API.checkUserByWalletId, address);
 
   if (userExists) {
@@ -17,6 +17,8 @@ function* login() {
     );
   } else {
     console.log("toto");
+    /* @ts-ignore */
+    history.push("Signup");
   }
 }
 

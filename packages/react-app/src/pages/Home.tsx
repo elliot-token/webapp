@@ -16,7 +16,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import WalletButton from "../organisms/WalletButton";
+import WalletButton from "components/WalletButton";
 import { subWeeks } from "date-fns";
 
 const toCandlestickData = (data: any) => {
@@ -217,7 +217,7 @@ function Home() {
       </AppBar>
       <Container style={{ marginTop: 32 }} maxWidth="xl">
         <Grid container spacing={2}>
-          <Grid item md={8}>
+          <Grid item md={8} xs={8}>
             <Paper>
               <Box pt={2} pb={4} px={2}>
                 <Typography>ETH Price Prediction</Typography>
@@ -227,7 +227,7 @@ function Home() {
               </Box>
             </Paper>
           </Grid>
-          <Grid item md={4}>
+          <Grid item md={4} xs={4}>
             <Paper>
               <Box pt={2} pb={4} px={2} flexDirection="column">
                 <Box mb={1}>

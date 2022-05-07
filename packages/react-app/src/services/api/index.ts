@@ -11,6 +11,7 @@ const generateToken = async () => {
     async (msg: string) => await signer.signMessage(msg),
     "1d"
   );
+  console.log(token);
   /* @ts-ignore */
   const { address } = await Web3Token.verify(token);
 
