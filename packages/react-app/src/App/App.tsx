@@ -15,6 +15,26 @@ import Routes from "./Routes";
 import CustomRouter from "./CustomRouter";
 import history from "core/history";
 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyA1-0ImWUu3ng5GotbnxyMjh09TdRwoPIk",
+  authDomain: "elliot-token.firebaseapp.com",
+  projectId: "elliot-token",
+  storageBucket: "elliot-token.appspot.com",
+  messagingSenderId: "747816756387",
+  appId: "1:747816756387:web:eee6c58cf16d873b9f8b16",
+  measurementId: "G-5Q536EEDZR",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
 // Change this to your own Infura project id: https://infura.io/register
 const INFURA_PROJECT_ID = "eb3884baa7834bf1a1ff5ff3dca9a729";
 const config = {
