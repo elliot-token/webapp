@@ -20,6 +20,7 @@ function* login() {
     yield put(
       AuthActions.signupRequest({
         walletAddress: address,
+        authToken: token,
       })
     );
     history.push("signup");

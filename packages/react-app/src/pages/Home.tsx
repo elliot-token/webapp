@@ -22,20 +22,25 @@ import BaseLayout from "components/nav/BaseLayout";
 Exporting(highcharts);
 Stockchart(highcharts);
 
-const toCandlestickData = (data: any) => {
-  return data.Data.Data.map((item: any) => ({
-    x: item.time * 1000,
-    open: item.open,
-    high: item.high,
-    low: item.low,
-    close: item.close,
-  }));
+const toCandlestickData = (data: any, lastPoint?: any) => {
+  return data.Data.Data.map((item: any, index: number) =>
+    index === 999 && lastPoint
+      ? lastPoint
+      : {
+          x: item.time * 1000,
+          open: item.open,
+          high: item.high,
+          low: item.low,
+          close: item.close,
+        }
+  );
 };
 
 let y = 1;
 const toFlagsData = (data: any) => {
   return data.Data.Data.map((item: any, index: number) => {
     const previousPrice = data.Data.Data[index === 0 ? 0 : index - 1].close;
+
     return {
       x: item.time * 1000,
       title: `${Math.floor((item.close / previousPrice - 1) * 100)}%`,
@@ -79,7 +84,7 @@ function Home() {
           return;
         }
 
-        const series: Array<SeriesOptionsType> = [
+        const seriesOptions: Array<SeriesOptionsType> = [
           {
             type: "candlestick",
             id: "dataseries",
@@ -135,10 +140,32 @@ function Home() {
             min: subWeeks(new Date(), 2).getTime(),
             max: new Date().getTime(),
           },
-          series,
+          series: seriesOptions,
           chart: {
             backgroundColor: "rgb(20, 37, 47)",
             borderRadius: 16,
+            /* events: {
+              load: function() {
+                console.log(this.series);
+                // set up the updating of the chart each second
+                var series = this.series[0];
+                setInterval(function() {
+                  const response = https://min-api.cryptocompare.com/data/v2/histominute?fsym=ETH&tsym=USDT&limit=1
+                  // series.removePoint(999);
+                  const lastPoint = {
+                    /* @ts-ignore */
+            /*  ...seriesOptions[0].data[999],
+                    close: y,
+                  };
+                  // series.removePoint(999);
+                  series.setData(
+                    toCandlestickData(data, lastPoint),
+                    true,
+                    true
+                  );
+                }, 60000);
+              },
+            },*/
           },
           plotOptions: {
             candlestick: {

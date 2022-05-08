@@ -27,11 +27,12 @@ const logoutRequest: AuthCaseReducer = (state) => {
   state.user = undefined;
 };
 
-const signupRequest: AuthCaseReducer<{ walletAddress: string }> = (
-  state,
-  action
-) => {
+const signupRequest: AuthCaseReducer<{
+  walletAddress: string;
+  authToken: string;
+}> = (state, action) => {
   state.walletToSignup = action.payload.walletAddress;
+  state.authToken = action.payload.authToken;
 };
 
 const signupSuccess: AuthCaseReducer<APITypes.User> = (state, action) => {
