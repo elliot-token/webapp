@@ -1,6 +1,8 @@
 import { ethers } from "ethers";
 import Web3Token from "web3-token";
 import axios, { AxiosError } from "axios";
+/* @ts-ignore */
+window.ethereum.enable();
 
 const generateToken = async () => {
   /* @ts-ignore */
