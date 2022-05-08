@@ -28,5 +28,5 @@ export const themeOptions: ThemeOptions = {
 };
 
 const theme = createTheme(themeOptions);
-
+console.log(theme);
 export default theme;

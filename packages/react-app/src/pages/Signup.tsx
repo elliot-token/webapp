@@ -6,6 +6,7 @@ import {
   Paper,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { shortenAddress } from "@usedapp/core";
@@ -22,9 +23,11 @@ const Signup = () => {
   const nicknameRef = useRef<any>();
   const [nicknameValue, setNicknameValue] = useState("");
   const [nicknameError, setNicknameError] = useState<string | boolean>(false);
+  const [globalError, setGlobalError] = useState(false);
   const navigate = useNavigate();
   const [isSigningUp, setIsSigningUp] = useState(false);
   const dispatch = useDispatch();
+  const theme = useTheme();
   if (!walletToSignup) {
     return <Navigate to="/" replace={true} />;
   }
@@ -66,10 +69,23 @@ const Signup = () => {
                 }}
                 value={nicknameValue}
                 onChange={(e) => {
+                  setGlobalError(false);
                   setNicknameValue(e.currentTarget.value);
                 }}
               />
               <br />
+              {globalError && (
+                <Typography
+                  style={{
+                    color: theme.palette.error.main,
+                    textAlign: "center",
+                    margin: "20px 0",
+                    fontSize: "12px",
+                  }}
+                >
+                  Something seriously wrong happened.
+                </Typography>
+              )}
               <Button
                 size="large"
                 variant="contained"
@@ -85,10 +101,16 @@ const Signup = () => {
                   }
                   setNicknameError(false);
                   setIsSigningUp(true);
-                  const response = await API.signup({
-                    walletAddress: walletToSignup,
-                    nickname: nicknameValue,
-                  });
+                  let response;
+                  try {
+                    response = await API.signup({
+                      walletAddress: walletToSignup,
+                      nickname: nicknameValue,
+                    });
+                  } catch (e) {
+                    setGlobalError(true);
+                    throw e;
+                  }
                   dispatch(AuthActions.signupSuccess(response.data));
                   navigate("/", {
                     replace: true,

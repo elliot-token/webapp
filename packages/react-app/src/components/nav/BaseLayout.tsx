@@ -8,6 +8,7 @@ import {
 import { Box, useTheme } from "@mui/system";
 import WalletButton from "components/WalletButton";
 import React from "react";
+import { Link } from "react-router-dom";
 
 type Props = {
   children: React.ReactNode;
@@ -28,14 +29,16 @@ const BaseLayout = ({ children, disableWalletButton }: Props) => {
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <Box sx={{ flexGrow: 1 }}>
-              <Typography
-                variant="h6"
-                noWrap
-                component="div"
-                sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
-              >
-                Elliot
-              </Typography>
+              <Link to="/">
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="div"
+                  sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
+                >
+                  Elliot
+                </Typography>
+              </Link>
             </Box>
             {!disableWalletButton && <WalletButton />}
           </Toolbar>
