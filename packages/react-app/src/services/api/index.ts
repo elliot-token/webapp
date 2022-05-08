@@ -60,10 +60,7 @@ const signup = async ({
   const store = require("../../store").default;
   console.log(store);
 
-  response = await axios.post<{
-    walletAddress: string;
-    nickname: string;
-  }>(
+  response = await axios.post<APITypes.User>(
     `${ELLIOT_API}/api/v1/signup`,
     {
       walletAddress,
