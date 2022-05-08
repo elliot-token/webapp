@@ -1,29 +1,51 @@
-import { Button } from "@mui/material";
-import { shortenIfAddress, useEthers } from "@usedapp/core";
+import { Chip, Typography } from "@mui/material";
+import { shortenIfAddress } from "@usedapp/core";
 import { useDispatch, useSelector } from "react-redux";
 import { AuthActions } from "../store/auth";
 import AuthSelectors from "../store/auth/selectors";
 
 const WalletButton = () => {
-  const { account } = useEthers();
-
-  const connectedWallet = useSelector(AuthSelectors.getConnectedWallet);
-
+  const user = useSelector(AuthSelectors.getCurrentUser);
   const dispatch = useDispatch();
 
   return (
-    <Button
-      variant="contained"
+    <Chip
+      size="medium"
+      style={{
+        backgroundColor: "rgb(120, 145, 156)",
+        padding: "20px 4px",
+        borderRadius: "20px",
+      }}
+      label={
+        user ? (
+          <>
+            <Typography style={{ fontSize: "0.75rem" }}>
+              {user.username}
+            </Typography>
+            <Typography
+              variant="caption"
+              style={{
+                fontSize: "0.625rem",
+                marginTop: "-8px",
+                color: "white",
+              }}
+            >
+              {shortenIfAddress(user.walletAddress)}
+            </Typography>
+          </>
+        ) : (
+          "Connect"
+        )
+      }
       onClick={() => {
-        if (!connectedWallet) {
+        console.log(user);
+        if (!user) {
           dispatch(AuthActions.loginRequest());
         } else {
           dispatch(AuthActions.logoutRequest());
         }
       }}
-    >
-      {connectedWallet ? shortenIfAddress(connectedWallet) : "Connect"}
-    </Button>
+    />
   );
 };
 

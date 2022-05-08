@@ -22,6 +22,9 @@ export const themeOptions: ThemeOptions = {
   typography: {
     fontFamily: "Poppins",
   },
+  shape: {
+    borderRadius: 8,
+  },
 };
 
 const theme = createTheme(themeOptions);

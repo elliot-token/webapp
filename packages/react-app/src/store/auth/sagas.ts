@@ -17,8 +17,12 @@ function* login() {
     );
   } else {
     console.log("toto");
-    /* @ts-ignore */
-    history.push("Signup");
+    yield put(
+      AuthActions.signupRequest({
+        walletAddress: address,
+      })
+    );
+    history.push("signup");
   }
 }
 

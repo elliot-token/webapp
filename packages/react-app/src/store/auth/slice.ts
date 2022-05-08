@@ -3,6 +3,7 @@ import { APITypes } from "../../services/api";
 import { indexReducer } from "../_helpers";
 
 type AuthState = {
+  walletToSignup?: string;
   connectedWallet?: string;
   authToken?: string;
   user?: APITypes.User;
@@ -23,7 +24,20 @@ const loginSuccess: AuthCaseReducer<{
 };
 
 const logoutRequest: AuthCaseReducer = (state) => {
-  state.connectedWallet = undefined;
+  state.user = undefined;
+};
+
+const signupRequest: AuthCaseReducer<{ walletAddress: string }> = (
+  state,
+  action
+) => {
+  state.walletToSignup = action.payload.walletAddress;
+};
+
+const signupSuccess: AuthCaseReducer<APITypes.User> = (state, action) => {
+  state.walletToSignup = undefined;
+  state.connectedWallet = action.payload.walletAddress;
+  state.user = action.payload;
 };
 
 const { reducer: AuthReducer, actions: AuthActions } = createSlice({
@@ -33,6 +47,8 @@ const { reducer: AuthReducer, actions: AuthActions } = createSlice({
     loginRequest,
     logoutRequest,
     loginSuccess,
+    signupRequest,
+    signupSuccess,
   },
 });
 

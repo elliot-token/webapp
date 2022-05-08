@@ -12,8 +12,8 @@ import { Provider } from "react-redux";
 import store, { persistor } from "store";
 import { PersistGate } from "redux-persist/integration/react";
 import Routes from "./Routes";
-import { BrowserRouter } from "react-router-dom";
-import Home from "pages/Home";
+import CustomRouter from "./CustomRouter";
+import history from "core/history";
 
 // Change this to your own Infura project id: https://infura.io/register
 const INFURA_PROJECT_ID = "eb3884baa7834bf1a1ff5ff3dca9a729";
@@ -33,17 +33,19 @@ const client = new ApolloClient({
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <ApolloProvider client={client}>
-        <ThemeProvider theme={theme}>
-          <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-              <Home />
-            </PersistGate>
-          </Provider>
-        </ThemeProvider>
-      </ApolloProvider>
-    </BrowserRouter>
+    <CustomRouter history={history}>
+      <DAppProvider config={config}>
+        <ApolloProvider client={client}>
+          <ThemeProvider theme={theme}>
+            <Provider store={store}>
+              <PersistGate loading={null} persistor={persistor}>
+                <Routes />
+              </PersistGate>
+            </Provider>
+          </ThemeProvider>
+        </ApolloProvider>
+      </DAppProvider>
+    </CustomRouter>
   );
 };
 

@@ -26,7 +26,8 @@ const generateToken = async () => {
 
 export namespace APITypes {
   export type User = {
-    walletId: string;
+    walletAddress: string;
+    username: string;
   };
 }
 
@@ -47,9 +48,40 @@ const checkUserByWalletId = async (walletId: string) => {
   return response.data;
 };
 
+const signup = async ({
+  walletAddress,
+  nickname,
+}: {
+  walletAddress: string;
+  nickname: string;
+}) => {
+  let response;
+
+  const store = require("../../store").default;
+  console.log(store);
+
+  response = await axios.post<{
+    walletAddress: string;
+    nickname: string;
+  }>(
+    `${ELLIOT_API}/api/v1/signup`,
+    {
+      walletAddress,
+      username: nickname,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${store.getState().auth.authToken}`,
+      },
+    }
+  );
+  return response;
+};
+
 const API = {
   generateToken,
   checkUserByWalletId,
+  signup,
 };
 
 export default API;

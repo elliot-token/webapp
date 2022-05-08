@@ -1,8 +1,9 @@
-import { useQuery } from "@apollo/client";
-import { Contract } from "@ethersproject/contracts";
-import { useCall } from "@usedapp/core";
-import { useEffect } from "react";
-import GET_TRANSFERS from "../services/graphql/subgraph";
+import { useEffect, useRef, useState } from "react";
+import highcharts, { SeriesOptionsType } from "highcharts";
+import Exporting from "highcharts/modules/exporting";
+import Stockchart from "highcharts/modules/stock";
+// Initialize exporting module.
+
 import {
   AppBar,
   Button,
@@ -10,7 +11,6 @@ import {
   CssBaseline,
   Grid,
   Paper,
-  ThemeProvider,
   Toolbar,
   Typography,
   useTheme,
@@ -18,24 +18,32 @@ import {
 import { Box } from "@mui/system";
 import WalletButton from "components/WalletButton";
 import { subWeeks } from "date-fns";
+import BaseLayout from "components/nav/BaseLayout";
+Exporting(highcharts);
+Stockchart(highcharts);
 
 const toCandlestickData = (data: any) => {
-  return data.Data.Data.map((item: any) => [
-    item.time * 1000,
-    item.open,
-    item.high,
-    item.low,
-    item.close,
-  ]);
+  return data.Data.Data.map((item: any) => ({
+    x: item.time * 1000,
+    open: item.open,
+    high: item.high,
+    low: item.low,
+    close: item.close,
+  }));
 };
 
 let y = 1;
 const toFlagsData = (data: any) => {
-  return data.Data.Data.map((item: any) => ({
-    x: y++,
-    title: "A",
-  }));
+  return data.Data.Data.map((item: any, index: number) => {
+    const previousPrice = data.Data.Data[index === 0 ? 0 : index - 1].close;
+    return {
+      x: item.time * 1000,
+      title: `${Math.floor((item.close / previousPrice - 1) * 100)}%`,
+      text: `Previous: ${previousPrice}\nResolve: ${item.close}`,
+    };
+  });
 };
+
 function Home() {
   // Read more about useDapp on https://usedapp.io/
   /* const { value: tokenBalance } =
@@ -61,20 +69,59 @@ function Home() {
   }, [loading, subgraphQueryError, data]);
 */
   const them = useTheme();
+  const ref = useRef<HTMLDivElement>(null);
+  const [flagsEnabled, setFlagsEnabled] = useState(true);
   useEffect(() => {
-    /* @ts-ignore */
-    Highcharts.getJSON(
-      "https://min-api.cryptocompare.com/data/v2/histoday?fsym=ETH&tsym=USD&limit=1000",
+    highcharts.getJSON(
+      "https://min-api.cryptocompare.com/data/v2/histoday?fsym=ETH&tsym=USD&limit=999",
       function(data: any) {
-        console.log(toFlagsData(data));
-        /* @ts-ignore */
-        Highcharts.stockChart("container", {
+        if (!ref.current) {
+          return;
+        }
+
+        const series: Array<SeriesOptionsType> = [
+          {
+            type: "candlestick",
+            id: "dataseries",
+            name: "ETH/USDT",
+            data: toCandlestickData(data),
+            dataGrouping: {
+              units: [
+                [
+                  "week", // unit name
+                  [1], // allowed multiples
+                ],
+                ["month", [1, 2, 3, 4, 6]],
+              ],
+            },
+          },
+          ...(flagsEnabled
+            ? [
+                {
+                  type: "flags",
+                  data: toFlagsData(data),
+                  onSeries: "dataseries",
+                  shape: "flag",
+                  width: 16,
+                  fillColor: "rgb(11, 22, 29)",
+                  color: "red",
+                  style: {
+                    fontFamily: "Poppins",
+                    color: "white",
+                    opacity: 0.6,
+                    fontSize: "8px",
+                  },
+                } as const,
+              ]
+            : []),
+        ];
+        highcharts.stockChart(ref.current, {
           title: {
             text: "ETH/USDT",
             style: {
               color: theme.palette.text.primary,
               fontFamily: theme.typography.fontFamily,
-              fontSize: 12,
+              fontSize: "12px",
             },
           },
           navigator: {
@@ -88,29 +135,7 @@ function Home() {
             min: subWeeks(new Date(), 2).getTime(),
             max: new Date().getTime(),
           },
-          series: [
-            {
-              type: "candlestick",
-              name: "ETH/USDT",
-              data: toCandlestickData(data),
-              dataGrouping: {
-                units: [
-                  [
-                    "week", // unit name
-                    [1], // allowed multiples
-                  ],
-                  ["month", [1, 2, 3, 4, 6]],
-                ],
-              },
-            },
-            /* {
-              type: "flags",
-              data: toFlagsData(data),
-              onSeries: "dataseries",
-              shape: "squarepin",
-              width: 16,
-            },*/
-          ],
+          series,
           chart: {
             backgroundColor: "rgb(20, 37, 47)",
             borderRadius: 16,
@@ -145,29 +170,54 @@ function Home() {
                 count: 2,
                 text: "2w",
                 title: "View 2 weeks",
+                events: {
+                  click() {
+                    setFlagsEnabled(true);
+                  },
+                },
               },
               {
                 type: "month",
                 count: 1,
                 text: "1m",
                 title: "View 1 month",
+                events: {
+                  click() {
+                    setFlagsEnabled(true);
+                  },
+                },
               },
               {
                 type: "month",
                 count: 3,
                 text: "3m",
                 title: "View 3 months",
+                events: {
+                  click() {
+                    setFlagsEnabled(false);
+                  },
+                },
               },
               {
                 type: "year",
                 count: 1,
                 text: "1y",
                 title: "View 1 year",
+                events: {
+                  click() {
+                    setFlagsEnabled(false);
+                  },
+                },
               },
               {
                 type: "all",
                 text: "All",
                 title: "View all",
+                events: {
+                  click() {
+                    setFlagsEnabled(false);
+                  },
+                },
               },
             ],
             buttonTheme: {
@@ -175,9 +225,6 @@ function Home() {
               stroke: "white",
               style: {
                 color: theme.palette.text.primary,
-                "&:hover": {
-                  color: "red",
-                },
               },
               hover: {
                 color: "red",
@@ -187,126 +234,99 @@ function Home() {
         });
       }
     );
-  }, []);
+  }, [flagsEnabled]);
   const theme = useTheme();
   return (
-    <>
-      <AppBar
-        color="primary"
-        position="sticky"
-        style={{
-          backgroundImage: "none",
-          backgroundColor: theme.palette.background.default,
-        }}
-      >
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
-            <Box sx={{ flexGrow: 1 }}>
-              <Typography
-                variant="h6"
-                noWrap
-                component="div"
-                sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
-              >
-                Elliot
-              </Typography>
+    <BaseLayout>
+      <Grid container spacing={2}>
+        <Grid item md={8} xs={8}>
+          <Paper>
+            <Box pt={2} pb={4} px={2}>
+              <Typography>ETH Price Prediction</Typography>
+              <Box my={2}>
+                <div id="container" ref={ref} />
+              </Box>
             </Box>
-            <WalletButton />
-          </Toolbar>
-        </Container>
-      </AppBar>
-      <Container style={{ marginTop: 32 }} maxWidth="xl">
-        <Grid container spacing={2}>
-          <Grid item md={8} xs={8}>
-            <Paper>
-              <Box pt={2} pb={4} px={2}>
-                <Typography>ETH Price Prediction</Typography>
-                <Box my={2}>
-                  <div id="container" />
-                </Box>
-              </Box>
-            </Paper>
-          </Grid>
-          <Grid item md={4} xs={4}>
-            <Paper>
-              <Box pt={2} pb={4} px={2} flexDirection="column">
-                <Box mb={1}>
-                  <Button
-                    variant="outlined"
-                    style={{
-                      width: "100%",
-                    }}
-                  >
-                    +10%
-                  </Button>
-                </Box>
-                <Box mb={1}>
-                  <Button
-                    variant="outlined"
-                    style={{
-                      width: "100%",
-                    }}
-                  >
-                    +5%
-                  </Button>
-                </Box>
-                <Box mb={1}>
-                  <Button
-                    variant="outlined"
-                    style={{
-                      width: "100%",
-                    }}
-                  >
-                    +2%
-                  </Button>
-                </Box>
-                <Box mb={1}>
-                  <Button
-                    variant="outlined"
-                    style={{
-                      width: "100%",
-                    }}
-                  >
-                    -2%
-                  </Button>
-                </Box>
-                <Box mb={1}>
-                  <Button
-                    variant="outlined"
-                    style={{
-                      width: "100%",
-                    }}
-                  >
-                    -5%
-                  </Button>
-                </Box>
-                <Box mb={1}>
-                  <Button
-                    variant="outlined"
-                    style={{
-                      width: "100%",
-                    }}
-                  >
-                    -10%
-                  </Button>
-                </Box>
-                <Box mt={6} mb={2}>
-                  <Button
-                    variant="contained"
-                    style={{
-                      width: "100%",
-                    }}
-                  >
-                    Confirm
-                  </Button>
-                </Box>
-              </Box>
-            </Paper>
-          </Grid>
+          </Paper>
         </Grid>
-      </Container>
-      <CssBaseline />
-    </>
+        <Grid item md={4} xs={4}>
+          <Paper>
+            <Box pt={2} pb={4} px={2} flexDirection="column">
+              <Box mb={1}>
+                <Button
+                  variant="outlined"
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  +10%
+                </Button>
+              </Box>
+              <Box mb={1}>
+                <Button
+                  variant="outlined"
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  +5%
+                </Button>
+              </Box>
+              <Box mb={1}>
+                <Button
+                  variant="outlined"
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  +2%
+                </Button>
+              </Box>
+              <Box mb={1}>
+                <Button
+                  variant="outlined"
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  -2%
+                </Button>
+              </Box>
+              <Box mb={1}>
+                <Button
+                  variant="outlined"
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  -5%
+                </Button>
+              </Box>
+              <Box mb={1}>
+                <Button
+                  variant="outlined"
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  -10%
+                </Button>
+              </Box>
+              <Box mt={6} mb={2}>
+                <Button
+                  variant="contained"
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  Confirm
+                </Button>
+              </Box>
+            </Box>
+          </Paper>
+        </Grid>
+      </Grid>
+    </BaseLayout>
   );
 }
 
