@@ -15,6 +15,7 @@ const PlaceBetButton = () => {
       }}
       onClick={async () => {
         let result;
+
         try {
           result = await betContract.functions.placeBets(1, 1, "toto");
         } catch (e) {
