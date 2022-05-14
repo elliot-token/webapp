@@ -1,5 +1,5 @@
 import { Route, Routes as LibraryRoutes } from "react-router-dom";
-import Home from "../pages/Home";
+import Home from "../pages/Home/Home";
 import Signup from "../pages/Signup";
 
 const Routes = () => {

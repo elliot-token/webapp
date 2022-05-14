@@ -1,5 +1,5 @@
 // This address points to a dummy ERC-20 contract. Replace it with your own smart contracts.
 const addresses = {
-  ceaErc20: "0xa6dF0C88916f3e2831A329CE46566dDfBe9E74b7",
+  bet: "0x0cB17e12d9a5D99B59f5cf40D4Da500dd40775bA",
 };
 export default addresses;

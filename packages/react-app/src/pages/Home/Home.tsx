@@ -19,6 +19,7 @@ import { Box } from "@mui/system";
 import WalletButton from "components/WalletButton";
 import { subWeeks } from "date-fns";
 import BaseLayout from "components/nav/BaseLayout";
+import PlaceBetButton from "./PlaceBetButton";
 Exporting(highcharts);
 Stockchart(highcharts);
 
@@ -340,14 +341,7 @@ function Home() {
                 </Button>
               </Box>
               <Box mt={6} mb={2}>
-                <Button
-                  variant="contained"
-                  style={{
-                    width: "100%",
-                  }}
-                >
-                  Confirm
-                </Button>
+                <PlaceBetButton />
               </Box>
             </Box>
           </Paper>
