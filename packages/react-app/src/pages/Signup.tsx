@@ -111,7 +111,13 @@ const Signup = () => {
                     setGlobalError(true);
                     throw e;
                   }
-                  dispatch(AuthActions.signupSuccess(response.data));
+                  console.log(response);
+                  dispatch(
+                    AuthActions.signupSuccess({
+                      username: nicknameValue,
+                      walletAddress: walletToSignup,
+                    })
+                  );
                   navigate("/", {
                     replace: true,
                   });

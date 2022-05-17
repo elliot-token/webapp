@@ -1,5 +1,6 @@
 import "./index.css";
 import App from "./App";
+import "./services/metamask";
 
 import ReactDOM from "react-dom";
 import "@fontsource/poppins/300.css";

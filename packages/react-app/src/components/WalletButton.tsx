@@ -7,21 +7,20 @@ import { tokenContract } from "services/contracts";
 import { AuthActions } from "../store/auth";
 import AuthSelectors from "../store/auth/selectors";
 import { Box, useTheme } from "@mui/system";
+import web3Utils from "utils/web3";
 
 const WalletButton = () => {
   const user = useSelector(AuthSelectors.getCurrentUser);
   const dispatch = useDispatch();
-  const [tokenAmount, setTokenAmount] = useState("0");
+  const [tokenAmount, setTokenAmount] = useState(0);
   const [popoverOpen, setPopoverOpen] = useState(false);
   useEffect(() => {
     (async () => {
       if (!user?.walletAddress) {
         return;
       }
-      const result = await tokenContract.functions.balanceOf(
-        user.walletAddress
-      );
-      setTokenAmount(web3.utils.fromWei(result[0].toString()));
+      const result = await tokenContract.functions.balanceOf();
+      setTokenAmount(web3Utils.fromWei(result[0].toString()));
     })();
   }, [user?.walletAddress]);
 
@@ -42,7 +41,7 @@ const WalletButton = () => {
         }}
       >
         {user && (
-          <Box p={2}>
+          <Box pr={6} pl={2} py={2}>
             <Typography style={{ marginBottom: "8px" }}>
               {user.username}
             </Typography>

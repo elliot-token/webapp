@@ -4,22 +4,12 @@ import Exporting from "highcharts/modules/exporting";
 import Stockchart from "highcharts/modules/stock";
 // Initialize exporting module.
 
-import {
-  AppBar,
-  Button,
-  Container,
-  CssBaseline,
-  Grid,
-  Paper,
-  Toolbar,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Button, Grid, Paper, Typography, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
-import WalletButton from "components/WalletButton";
 import { subWeeks } from "date-fns";
 import BaseLayout from "components/nav/BaseLayout";
 import PlaceBetButton from "./PlaceBetButton";
+import History from "./History";
 Exporting(highcharts);
 Stockchart(highcharts);
 
@@ -347,6 +337,7 @@ function Home() {
           </Paper>
         </Grid>
       </Grid>
+      <History />
     </BaseLayout>
   );
 }
