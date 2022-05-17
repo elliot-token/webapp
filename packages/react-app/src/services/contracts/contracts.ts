@@ -14,7 +14,7 @@ const ADDRESSES = {
   },
 };
 
-const CHAIN_NETWORK = "localhost";
+const CHAIN_NETWORK = "kovan";
 
 const chainAddresses = ADDRESSES[CHAIN_NETWORK];
 
