@@ -28,7 +28,7 @@ const History = () => {
       }
       setBetsList([
         {
-          betAmount: web3Utils.toNumber(result[0]),
+          betAmount: web3Utils.fromWei(result[0]),
           securityId: web3Utils.toNumber(result[1]),
           id: web3Utils.toNumber(result[2]),
           price: web3Utils.toNumber(result[3]),

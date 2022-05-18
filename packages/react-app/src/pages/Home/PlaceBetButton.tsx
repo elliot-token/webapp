@@ -46,7 +46,12 @@ const PlaceBetButton = () => {
         let result;
 
         try {
-          result = await betContract.placeBets(2, 1, 1, "toto");
+          result = await betContract.placeBets(
+            "2000000000000000000",
+            1,
+            1,
+            "toto"
+          );
         } catch (e) {
           const error: any = e;
           if (error.code === 4001) {
