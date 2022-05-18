@@ -12,15 +12,17 @@ import web3Utils from "utils/web3";
 const WalletButton = () => {
   const user = useSelector(AuthSelectors.getCurrentUser);
   const dispatch = useDispatch();
-  const [tokenAmount, setTokenAmount] = useState(0);
+  const [tokenAmount, setTokenAmount] = useState<number | undefined>(undefined);
   const [popoverOpen, setPopoverOpen] = useState(false);
   useEffect(() => {
     (async () => {
       if (!user?.walletAddress) {
         return;
       }
-      const result = await tokenContract.functions.balanceOf();
-      setTokenAmount(web3Utils.fromWei(result[0].toString()));
+      const result = await tokenContract.functions.balanceOf(
+        user.walletAddress
+      );
+      setTokenAmount(web3Utils.fromWei(result[0]));
     })();
   }, [user?.walletAddress]);
 
@@ -91,9 +93,9 @@ const WalletButton = () => {
                   {user.username[0]}
                 </Typography>
               </Avatar>
-              <Typography
-                style={{ marginLeft: "8px" }}
-              >{`${tokenAmount} ELL`}</Typography>
+              <Typography style={{ marginLeft: "8px" }}>
+                {tokenAmount !== undefined ? `${tokenAmount} ELL` : ""}
+              </Typography>
             </Box>
           ) : (
             "Connect"

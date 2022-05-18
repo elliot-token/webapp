@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 
 import React, { useEffect } from "react";
-import { betContract } from "services/contracts";
+import { betContract, chainAddresses, tokenContract } from "services/contracts";
 
 const PlaceBetButton = () => {
   useEffect(() => {
@@ -34,11 +34,19 @@ const PlaceBetButton = () => {
         });
         */
 
+        try {
+          await tokenContract.functions.approve(
+            chainAddresses.bet,
+            "2000000000000000000"
+          );
+        } catch (e) {
+          throw e;
+        }
+
         let result;
 
         try {
-          console.log(betContract);
-          result = await betContract.testBet(200, 1, 1, "toto");
+          result = await betContract.placeBets(2, 1, 1, "toto");
         } catch (e) {
           const error: any = e;
           if (error.code === 4001) {

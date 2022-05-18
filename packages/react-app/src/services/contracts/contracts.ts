@@ -5,12 +5,12 @@ import tokenAbi from "./token-abi.json";
 
 const ADDRESSES = {
   localhost: {
-    token: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
-    bet: "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
+    token: "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
+    bet: "0x59b670e9fA9D0A427751Af201D676719a970857b",
   },
   kovan: {
-    token: "0x3C66C78D941128BddC918b4c901C954b5099EAA0",
-    bet: "0x3DceF116E08580985Bb1E53AE756b5390bA2A5E8",
+    token: "0x57De2d595c308E92d1858231C474a6f215A5C7E8",
+    bet: "0x56Bc857011e0f55c8E97bcC2201682b3E5936716",
   },
 };
 
@@ -31,4 +31,4 @@ const tokenContract = new Contract(
   new utils.Interface(JSON.stringify(tokenAbi.abi)),
   signer
 );
-export { betContract, tokenContract };
+export { betContract, tokenContract, chainAddresses };
